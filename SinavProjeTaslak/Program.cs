@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using SinavProjeTaslak.Data.Context;
+using SinavProjeTaslak.Data.Entities;
+
 namespace SinavProjeTaslak
 {
     public class Program
@@ -8,6 +12,21 @@ namespace SinavProjeTaslak
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<BlogContext>(opt=>
+            {
+                opt.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
+            });
+
+            builder.Services.AddIdentity<AppUser, AppRole>(opt=>
+            {
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.SignIn.RequireConfirmedEmail = false;
+
+            }).AddEntityFrameworkStores<BlogContext>();
+
 
             var app = builder.Build();
 
